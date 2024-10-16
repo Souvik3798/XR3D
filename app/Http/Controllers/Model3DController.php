@@ -106,49 +106,65 @@ class Model3DController extends Controller
 
     public function delete($id)
     {
-        $model3D = Model3D::findOrFail($id);
+        try {
+            $model3D = Model3D::findOrFail($id);
 
-        // Check if the authenticated user owns this model
-        if ($model3D->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            // Check if the authenticated user owns this model
+            if ($model3D->user_id !== Auth::id()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            // Get the file path before deleting the model
+            $filePath = $model3D->model_file;
+
+            $model3D->delete();
+
+            // Delete the associated file if it exists
+            if ($filePath && Storage::disk('public')->exists($filePath)) {
+                Storage::disk('public')->delete($filePath);
+            }
+
+            return response()->json(['message' => 'Model and associated file deleted successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while deleting the model', 'error' => $e->getMessage()], 500);
         }
-
-        // Get the file path before deleting the model
-        $filePath = $model3D->model_file;
-
-        $model3D->delete();
-
-        // Delete the associated file if it exists
-        if ($filePath && Storage::disk('public')->exists($filePath)) {
-            Storage::disk('public')->delete($filePath);
-        }
-
-        return response()->json(['message' => 'Model and associated file deleted successfully']);
     }
 
     public function edit($id)
     {
-        $model3D = Model3D::findOrFail($id);
+        try {
+            $model3D = Model3D::findOrFail($id);
 
-        // Check if the authenticated user owns this model
-        if ($model3D->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            // Check if the authenticated user owns this model
+            if ($model3D->user_id !== Auth::id()) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
+
+            return response()->json(['model' => $model3D]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while editing the model', 'error' => $e->getMessage()], 500);
         }
-
-        return response()->json(['model' => $model3D]);
     }
 
     public function listUserModels()
     {
-        $models = Model3D::where('user_id', Auth::id())->get();
+        try {
+            $models = Model3D::where('user_id', Auth::id())->get();
 
-        return response()->json(['models' => $models]);
+            return response()->json(['models' => $models]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while listing user models', 'error' => $e->getMessage()], 500);
+        }
     }
 
     public function listAllModels()
     {
-        $models = Model3D::all();
+        try {
+            $models = Model3D::all();
 
-        return response()->json(['models' => $models]);
+            return response()->json(['models' => $models]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'An error occurred while listing all models', 'error' => $e->getMessage()], 500);
+        }
     }
 }
