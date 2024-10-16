@@ -20,9 +20,3 @@
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Add MIME types for 3D model files
-AddType model/gltf+json .gltf
-AddType model/gltf-binary .glb
-AddType application/octet-stream .fbx
-AddType text/plain .obj
-AddType model/stl .stl
