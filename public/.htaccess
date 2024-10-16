@@ -14,9 +14,15 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
+    # Exclude .gltf files from being rewritten
+    RewriteCond %{REQUEST_URI} \.gltf$ [NC]
+    RewriteRule .* - [L]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
-</IfModule>
 
+    # Set MIME type for .gltf files
+    AddType model/gltf+json .gltf
+</IfModule>
