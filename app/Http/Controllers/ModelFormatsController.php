@@ -15,7 +15,7 @@ class ModelFormatsController extends Controller
         try {
             $request->validate([
                 'format' => 'required|string|max:255',
-                'model_file' => 'required|file|mimetypes:application/json,obj,fbx,gltf,glb|max:30720', // 30MB max
+                'model_file' => 'required|file|max:30720', // 30MB max
                 'model3d_id' => 'required|exists:model3ds,id',
             ]);
 
@@ -33,14 +33,8 @@ class ModelFormatsController extends Controller
             if ($request->hasFile('model_file')) {
                 $file = $request->file('model_file');
 
-                // Get the original extension
-                $extension = $file->getClientOriginalExtension();
-
-                // Generate a unique filename with the original extension
-                $filename = uniqid() . '.' . $extension;
-
-                // Store the file in the 'model_formats' folder on the 'public' disk
-                $path = $file->storeAs('model_formats', $filename, 'public');
+                // Store the file in the 'model_formats' folder without changing its name
+                $path = $file->storeAs('model_formats', $file->getClientOriginalName(), 'public');
 
                 $modelFormat->model_file = $path;
             }
@@ -71,7 +65,7 @@ class ModelFormatsController extends Controller
 
             $request->validate([
                 'format' => 'string|max:255',
-                'model_file' => 'nullable|file|mimetypes:application/json,obj,fbx,gltf,glb|max:30720', // 30MB max
+                'model_file' => 'nullable|file|max:30720', // 30MB max
                 'model3d_id' => 'exists:model3ds,id',
             ]);
 
@@ -91,14 +85,8 @@ class ModelFormatsController extends Controller
 
                 $file = $request->file('model_file');
 
-                // Get the original extension
-                $extension = $file->getClientOriginalExtension();
-
-                // Generate a unique filename with the original extension
-                $filename = uniqid() . '.' . $extension;
-
-                // Store the file in the 'model_formats' folder on the 'public' disk
-                $path = $file->storeAs('model_formats', $filename, 'public');
+                // Store the file in the 'model_formats' folder without changing its name
+                $path = $file->storeAs('model_formats', $file->getClientOriginalName(), 'public');
 
                 $modelFormat->model_file = $path;
             }

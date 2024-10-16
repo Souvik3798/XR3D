@@ -15,7 +15,8 @@ class Model3DController extends Controller
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
-                'model_file' => 'required|file|mimetypes:application/json,obj,fbx,gltf,glb|max:30720',
+                'model_file' => 'required|file|max:30720',
+
             ]);
 
             $model3D = new Model3D();
@@ -26,14 +27,8 @@ class Model3DController extends Controller
             if ($request->hasFile('model_file')) {
                 $file = $request->file('model_file');
 
-                // Get the original extension
-                $extension = $file->getClientOriginalExtension();
-
-                // Generate a unique filename with the correct extension
-                $filename = uniqid() . '.' . $extension;
-
-                // Store the file in the 'models' folder
-                $path = $file->storeAs('models', $filename, 'public');
+                // Store the file in the 'models' folder without changing its name
+                $path = $file->storeAs('models', $file->getClientOriginalName(), 'public');
 
                 $model3D->model_file = $path;
             }
@@ -62,7 +57,7 @@ class Model3DController extends Controller
         $request->validate([
             'title' => 'string|max:255',
             'description' => 'string',
-            'model_file' => 'nullable|file|mimetypes:application/json,obj,fbx,gltf,glb|max:30720', // 30MB max
+            'model_file' => 'nullable|file|max:30720', // 30MB max
         ]);
 
 
@@ -80,14 +75,8 @@ class Model3DController extends Controller
         if ($request->hasFile('model_file')) {
             $file = $request->file('model_file');
 
-            // Get the original extension of the uploaded file
-            $extension = $file->getClientOriginalExtension();
-
-            // Generate a unique filename with the correct extension
-            $filename = uniqid() . '.' . $extension;
-
-            // Store the file in the 'models' folder on the 'public' disk
-            $path = $file->storeAs('models', $filename, 'public');
+            // Store the file in the 'models' folder without changing its name
+            $path = $file->storeAs('models', $file->getClientOriginalName(), 'public');
 
             // Update the model's file path
             $model3D->model_file = $path;
