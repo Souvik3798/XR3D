@@ -156,9 +156,6 @@ class ModelFormatsController extends Controller
 
             $modelFormats = $model3d->modelFormat;
 
-            if ($modelFormats->isEmpty()) {
-                return response()->json(['message' => 'No model formats found for this model'], 404);
-            }
 
             return response()->json(['model_formats' => $modelFormats]);
         } catch (\Exception $e) {
