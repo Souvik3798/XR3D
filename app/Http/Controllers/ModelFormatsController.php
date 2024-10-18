@@ -154,7 +154,7 @@ class ModelFormatsController extends Controller
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
-            $modelFormats = $model3d->modelFormats;
+            $modelFormats = $model3d->modelFormat;
 
             return response()->json(['model_formats' => $modelFormats]);
         } catch (\Exception $e) {
