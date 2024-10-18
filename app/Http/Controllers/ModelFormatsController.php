@@ -157,7 +157,7 @@ class ModelFormatsController extends Controller
             $modelFormats = $model3d->modelFormat;
 
 
-            return response()->json(['model_formats' => $modelFormats]);
+            return response()->json(['model_formats' => $modelFormats, 'model3d' => $model3d], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while listing model formats', 'error' => $e->getMessage()], 500);
         }
