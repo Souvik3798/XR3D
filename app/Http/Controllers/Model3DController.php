@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Model3D;
+use App\Models\ModelFormats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -129,7 +130,10 @@ class Model3DController extends Controller
                 return response()->json(['message' => 'Unauthorized'], 403);
             }
 
-            return response()->json(['model' => $model3D]);
+            // Get all model formats associated with this model
+            $modelFormats = ModelFormats::where('model3d_id', $id)->get();
+
+            return response()->json(['model' => $model3D, 'model_formats' => $modelFormats]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'An error occurred while editing the model', 'error' => $e->getMessage()], 500);
         }
