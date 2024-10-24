@@ -3,6 +3,14 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+        Header set Access-Control-Allow-Methods "GET, OPTIONS"
+        Header set Access-Control-Allow-Headers "Origin, Authorization, Accept, Content-Type"
+    </IfModule>
+
+
     RewriteEngine On
 
     # Handle Authorization Header
@@ -24,5 +32,7 @@
     RewriteRule ^ index.php [L]
 
     # Set MIME type for .gltf files
-    AddType model/gltf+json .gltf
+    <IfModule mod_mime.c>
+        AddType model/gltf+json .gltf
+    </IfModule>
 </IfModule>
