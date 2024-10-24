@@ -17,6 +17,7 @@ class Model3DController extends Controller
                 'title' => 'required|string|max:255',
                 'description' => 'required|string',
                 'model_file' => 'required|file|max:30720',
+                'image' => 'nullable|file|max:30720', // Added validation for image
 
             ]);
 
@@ -32,6 +33,15 @@ class Model3DController extends Controller
                 $path = $file->storeAs('models', $file->getClientOriginalName(), 'public');
 
                 $model3D->model_file = $path;
+            }
+
+            if ($request->hasFile('image')) {
+                $imageFile = $request->file('image');
+
+                // Store the image file in the 'images' folder without changing its name
+                $imagePath = $imageFile->storeAs('images', $imageFile->getClientOriginalName(), 'public');
+
+                $model3D->image = $imagePath;
             }
 
             $model3D->save();
@@ -59,6 +69,7 @@ class Model3DController extends Controller
             'title' => 'string|max:255',
             'description' => 'string',
             'model_file' => 'nullable|file|max:30720', // 30MB max
+            'image' => 'nullable|file|max:30720', // Added validation for image
         ]);
 
 
@@ -81,6 +92,17 @@ class Model3DController extends Controller
 
             // Update the model's file path
             $model3D->model_file = $path;
+        }
+
+        // Handle image upload if a new image is provided
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+
+            // Store the image file in the 'images' folder without changing its name
+            $imagePath = $imageFile->storeAs('images', $imageFile->getClientOriginalName(), 'public');
+
+            // Update the model's image path
+            $model3D->image = $imagePath;
         }
 
         // Save the updated model

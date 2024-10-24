@@ -27,6 +27,7 @@ class Model3D extends Model
         'description',
         'model_file',
         'user_id',
+        'image',
     ];
 
     /**
